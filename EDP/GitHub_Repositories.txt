@@ -1,0 +1,20 @@
+https://github.com/adlnet/elrr-services-entities - Service db entities (shared)
+https://github.com/adlnet/elrr-external-services - polls with an LRS to get xapi data
+https://github.com/adlnet/elrr-datasync - Grabs xAPI data via externalservices and dumps it onto a kafka topic
+https://github.com/adlnet/elrr-aggregator - aggregates all of the statements from the topic and writes them to the database accordingly
+https://github.com/adlnet/elrr-services - API layer to CRUD data in the database has context menu
+https://github.com/US-ELRR/aggregator-parent
+
+https://github.com/yetanalytics/xapi-java-client
+https://github.com/US-ELRR/elrrdockercompose
+https://github.com/phleven/elrr_documentation
+https://github.com/phleven/EDP_documentation.git
+
+https://github.com/yetanalytics/java-xapi-tools
+
+
+
+https://github.com/adlnet/elrr-aggregator-parent
+https://github.com/adlnet/elrr-services-parent
+
+https://github.com/adlnet/elrr-dockercompose

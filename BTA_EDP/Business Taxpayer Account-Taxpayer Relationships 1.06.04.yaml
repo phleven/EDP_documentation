@@ -1,0 +1,503 @@
+openapi: 3.0.0
+info:
+  title: IRS Domain Data - Taxpayer Relationships
+  description: API for Data Services to return taxpayer relationships with other entities.
+  version: 1.06.04
+servers:
+  - url: /bus-acct-svcs-txprel/api/v1/
+paths:
+  /taxpayer-relationships/representative-of:
+    summary: >-
+      Set of services to deliver relationships a taxpayer has with other
+      entities based on formal tax filings or other submissions to IRS
+    get:
+      summary: >-
+        return a list of taxpayer accounts that the representative (natural
+        or organization) is related to
+      description: >-
+        return a list of taxpayer accounts (of individuals or organizations)
+        that the representative (natural or organization) can represent based
+        on official tax filings or other documentation
+      operationId: 'getRepresentedEntities'
+      parameters:
+        - $ref: '#/components/parameters/enterpriseBusCorrelationId'
+        - $ref: '#/components/parameters/apiCaller'        
+        - $ref: '#/components/parameters/representativeTIN'
+        - $ref: '#/components/parameters/optionalRepresentedEntityTIN'
+        - $ref: '#/components/parameters/effectiveStartDate'
+        - $ref: '#/components/parameters/effectiveEndDate'
+        - $ref: '#/components/parameters/taxpayerRelationshipType'
+      responses:
+        '200':
+          description: Represented Entities found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaxpayerRelationship'
+              examples:
+                taxpayerRelationshipsExample:
+                  $ref: '#/components/examples/RepresentedEntitiesExample'
+        '204':
+          description: No authorizers found for this TIN.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        default:
+          description: Default error sample response
+      tags:
+        - taxpayer relationship
+  /taxpayer-relationships/represented-by:
+    summary: services to return a list of authorized entities for a taxpayer entity
+    get:
+      summary: 'return a list of TINs that the represented entity (natural or organization) can be represented by'
+      description: 'return a list of TINs that the represented entity (natural or organization) can be represented by'
+      operationId: 'getRepresentativeEntities'
+      parameters:
+        - $ref: '#/components/parameters/enterpriseBusCorrelationId'
+        - $ref: '#/components/parameters/apiCaller'        
+        - $ref: '#/components/parameters/representedEntityTIN'
+        - $ref: '#/components/parameters/optionalRepresentativeTIN'
+        - $ref: '#/components/parameters/effectiveStartDate'
+        - $ref: '#/components/parameters/effectiveEndDate'
+        - $ref: '#/components/parameters/taxpayerRelationshipType'    
+      responses:
+        '200':
+          description: Authorizers found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaxpayerRelationship'
+              examples:
+                taxpayerRelationshipsExample:
+                  $ref: '#/components/examples/RepresentativesExample'
+        '204':
+          description: No authorizers found for this TIN.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        default:
+          description: Default error sample response
+      tags:
+        - taxpayer relationship
+  /taxpayer-relationships/version:
+    get:
+      summary: Returns version information for the /organization API
+      description: >-
+        Returns version information for the /organization API and volume
+        information on the organization entity
+      operationId: organizationVersion
+      parameters:
+        - $ref: '#/components/parameters/enterpriseBusCorrelationId'
+        - $ref: '#/components/parameters/apiCaller'
+      responses:
+        '200':
+          description: Here is the version information for this API
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiVersion'
+      tags:
+        - taxpayer relationship, version
+components:
+  schemas:
+    enterpriseBusCorrelationId:
+      type: string
+      pattern: >-
+        [0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}:[a-zA-Z0]{0,5}:[a-zA-Z0-9.*:]{0,19}:(T|B|O)
+      example: 550e8400-e29b-41d4-a716-446655440000:AMS00:System1:T
+    apiVersion:
+      type: object
+      properties:
+        buildVersion:
+          type: string
+          example: v1.04.01
+        debugLevel:
+          type: integer
+        environment:
+          type: string
+          enum:
+            - Development
+            - Test
+            - Pre-Production
+            - Production
+        controller:
+          type: string
+          example: TaxpayerRelationships
+        buildDateTime:
+          type: string
+          format: date-time
+        specificationVersion:
+          type: string
+          example: v1.04
+        entityCount:
+          type: integer
+          example: 152726
+        requestHost:
+          type: string
+          example: irs-edp-dev-api.a.cc.irs.gov
+        requestUri:
+          type: string
+          example: /api/v1/tax-modules/version
+        httpVerb:
+          type: string
+          example: GET
+        serviceStart:
+          type: string
+          format: date-time
+          example: '2024-01-15T18:29:31.820+00:00'
+        serviceEnd:
+          type: string
+          format: date-time
+          example: '2024-01-15T18:29:33.314+00:00'
+        serviceElapsedTimeSec:
+          type: number
+          example: 1.49
+    TaxpayerRelationship:
+      type: object
+      properties:
+        guid:
+          $ref: '#/components/schemas/GUID'
+        representativeTIN:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/EmployerIdentificationNumber'
+            - $ref: '#/components/schemas/SocialSecurityNumber'
+        representativeTINType:
+          $ref: '#/components/schemas/TINType'
+        representedEntityTIN:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/EmployerIdentificationNumber'
+            - $ref: '#/components/schemas/SocialSecurityNumber'
+        representedEntityTINType:
+          $ref: '#/components/schemas/TINType'
+        representationDocument:
+          $ref: '#/components/schemas/TaxFormName'
+        taxpayerRelationshipType:
+          $ref: '#/components/schemas/TaxpayerRelationshipType'
+        effectiveStartDate:
+          type: string
+          format: date
+        effectiveEndDate:
+          type: string
+          format: date
+        representationScope:
+          type: string
+          description: >-
+            To be used later to provide more granular authorization over the tax
+            account or specific returns
+          enum:
+            - 'All'
+    TINType:
+      type: string
+      enum:
+        - '0'
+        - '1'
+        - '2'
+        - '3'
+    TaxpayerRelationshipType:
+      type: string
+      enum:
+        - Employee
+        - Executor
+        - Joint Filer
+        - Partner
+        - Power of Attorney Holder
+        - Shareholder
+        - Sole Proprietor
+        - Third-Party Designee
+        - Tax Information Authorization Holder
+        - Trustee
+    Person:
+      type: object
+      required:
+        - lastName
+        - firstName
+        - ssn
+      properties:
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        ssn:
+          $ref: '#/components/schemas/SocialSecurityNumber'
+      example:
+        firstName: Joan
+        middleName: Mary
+        lastName: Richards
+        ssn: '135792468'
+    SocialSecurityNumber:
+      type: string
+      format: password
+      pattern: ^[0-9]{9}$
+    EmployerIdentificationNumber:
+      type: string
+      format: password
+      pattern: ^[0-9]{9}$
+      example: '123456789'
+    IndividualTaxIdentificationNumber:
+      type: string
+      format: password
+      pattern: ^[0-9]{9}$
+      example: '123456789'
+    AdoptionTaxIdentificationNumber:
+      type: string
+      format: password
+      pattern: ^[0-9]{9}$
+      example: '123456789'
+    TaxpayerIdentificationNumber:
+      oneOf:
+        - $ref: '#/components/schemas/SocialSecurityNumber'
+        - $ref: '#/components/schemas/EmployerIdentificationNumber'
+        - $ref: '#/components/schemas/IndividualTaxIdentificationNumber'
+        - $ref: '#/components/schemas/AdoptionTaxIdentificationNumber'
+    EntityType:
+      type: string
+      enum:
+        - C Corporation
+        - S Corporation
+        - Partnership
+        - Sole Proprietorship
+        - Trust
+        - Tax Exempt Organization
+        - Estate
+        - Government Entity
+    TaxFormName:
+      type: string
+      enum:
+        - '1065 K-1'
+        - '1120s K-1'
+        - 'W-2'
+        - '8821'
+        - '2848'
+        - '1040'
+        - '1041'
+        - '1120'
+        - '2290'
+        - '720'
+        - '941'
+    TaxYear:
+      type: integer
+      format: int32
+      minimum: 1970
+      description: The Tax Year for which the query is run
+    TaxMonth:
+      type: integer
+      format: int32
+    TaxPeriod:
+      type: string
+      format: ^(19|20)\d{2}(d{2})$
+      description: >-
+        Date representing the last day of the month for which the tax was
+        assessed
+    GUID:
+      type: string
+      format: uuid
+      description: >-
+        The GUID of the Business Account Role, representing an association of a
+        person to an organization with a specific role
+  examples:
+    RepresentedEntitiesExample:
+      value:
+        - guid: 21b13119-7855-4603-a28b-721e4b5f1dmd
+          authorizedTIN: '123456789'
+          authorizedTINType: '0'
+          authorizerTIN: '987654321'
+          authorizerTINType: '2'
+          authorizationDocument: 'W-2'
+          relationshipType: 'Employee'
+          effectiveStartDate: '01-01-2023'
+          effectiveEndDate: '12-31-2023'
+          authorizationScope: 'All'
+        - guid: 222b3119-7855-4603-a28b-721e4b5g2cnc
+          authorizedTIN: '123456789'
+          authorizedTINType: '0'
+          authorizerTIN: '987654987'
+          authorizerTINType: '2'
+          authorizationDocument: '1065 K-1'
+          relationshipType: 'Partner'
+          effectiveStartDate: '01-01-2023'
+          effectiveEndDate: '12-31-2023'
+          authorizationScope: 'All'
+    RepresentativesExample:
+      value:
+        - guid: 21b13119-7855-4603-a28b-721e4b5f1dmd
+          authorizedTIN: '123456123'
+          authorizedTINType: '0'
+          authorizerTIN: '987654321'
+          authorizerTINType: '2'
+          authorizationDocument: 'W-2'
+          relationshipType: 'Employee'
+          effectiveStartDate: '01-01-2023'
+          effectiveEndDate: '12-31-2023'
+          authorizationScope: 'All'
+        - guid: 222b3119-7855-4603-a28b-721e4b5g2cnc
+          authorizedTIN: '123456789'
+          authorizedTINType: '0'
+          authorizerTIN: '987654321'
+          authorizerTINType: '2'
+          authorizationDocument: '1065 K-1'
+          relationshipType: 'Partner'
+          effectiveStartDate: '01-01-2023'
+          effectiveEndDate: '12-31-2023'
+          authorizationScope: 'All'
+  parameters:
+    enterpriseBusCorrelationId:
+      name: enterpriseBusCorrelationId
+      description: Enterprise Business Correlation ID
+      in: header
+      required: false
+      schema:
+        $ref: '#/components/schemas/enterpriseBusCorrelationId'
+    apiCaller:
+      name: callingApplication
+      description: >-
+        the application that orginally calls the API in a consistent, agreed
+        upon naming convention
+      in: header
+      required: false
+      schema:
+        type: string
+      example: Business-Online-Account
+    ein:
+      name: ein
+      description: The Employer Identification Number of the Organization
+      in: header
+      required: true
+      schema:
+        $ref: '#/components/schemas/EmployerIdentificationNumber'
+    parentEIN:
+      name: parentEIN
+      description: The EIN of the organization whose subsidiaries are being queried for
+      in: header
+      required: true
+      schema:
+        $ref: '#/components/schemas/EmployerIdentificationNumber'
+    SSN:
+      in: header
+      description: >-
+        The Social Security Number of the person with an authorized role
+        associated with the Organization.
+      name: ssn
+      required: true
+      schema:
+        $ref: '#/components/schemas/SocialSecurityNumber'
+    representativeTIN:
+      in: header
+      description: >-
+        The TIN of the person/organization with an authorized role associated
+        with the Authorizer TIN.
+      name: representativeTIN
+      required: true
+      schema:
+        $ref: '#/components/schemas/TaxpayerIdentificationNumber'
+    representedEntityTIN:
+      in: header
+      description: 'The TIN of the person/organization who has authorized another entity.'
+      name: representedEntityTIN
+      required: true
+      schema:
+        $ref: '#/components/schemas/TaxpayerIdentificationNumber'    
+    optionalRepresentativeTIN:
+      in: header
+      description: >-
+        The TIN of the person/organization with an authorized role associated
+        with the Authorizer TIN.
+      name: representativeTIN
+      required: false
+      schema:
+        $ref: '#/components/schemas/TaxpayerIdentificationNumber'
+    optionalRepresentedEntityTIN:
+      in: header
+      description: 'The TIN of the person/organization who has authorized another entity.'
+      name: representedEntityTIN
+      required: false
+      schema:
+        $ref: '#/components/schemas/TaxpayerIdentificationNumber'    
+    optionalSSN:
+      in: header
+      description: >-
+        The Social Security Number of the person with an authorized role
+        associated with the Organization.
+      name: ssn
+      required: false
+      schema:
+        $ref: '#/components/schemas/SocialSecurityNumber'
+    taxYears:
+      in: header
+      description: >-
+        The Tax Years for which Tax Modules or Tax Transactions are being
+        requested.
+      name: taxYear
+      schema:
+        type: array
+        items:
+          type: string
+    effectiveStartDate:
+      in: header
+      name: effectiveStartDate
+      schema:
+        type: string
+        format: date
+    effectiveEndDate:
+      in: header
+      name: effectiveEndDate
+      schema:
+        type: string
+        format: date
+    eins:
+      name: eins
+      description: List of eins
+      in: header
+      required: true
+      schema:
+        type: array
+        items:
+          type: string
+    guid:
+      name: guid
+      description: 'The GUID of the object'
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/GUID'
+    taxpayerRelationshipType:
+      in: query
+      name: taxpayerRelationshipType
+      required: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/TaxpayerRelationshipType'
+  responses:
+    BadRequest:
+      description: This request was not formed correctly.
+    PreconditionFailed:
+      description: One of the required parameters is not correct.
+    GeneralError:
+      description: An error occurred
+    VolumeExceeds:
+      description: >-
+        String.format("Too many records returned (%d) for the ein, max size:
+        %d", recordsdatasetSize, API_MAX_DATASET_RETURN_LIMIT)
+  headers:
+    X-RateLimit-Limit:
+      description: Request limit per hour
+      schema:
+        type: integer
+      example: 100
+    X-RateLimit-Remaining:
+      description: Remaining requests for the hour
+      schema:
+        type: integer
+      example: 94
+  links: {}
+  callbacks: {}
