@@ -1,6 +1,0 @@
-Install Eclipse PyDev Plugin
-
-1. Unzip PyDev 13.1.0.zip to "C:\eclipse\dropins"
-2. Restart Eclipse
-3. Window --> Preferences
-   a. PyDev should be there 

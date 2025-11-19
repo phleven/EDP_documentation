@@ -1,0 +1,28 @@
+Install Eclipse PyDev Plugin
+Configure Eclipse PyDev Plugin
+Create a new Python Project
+
+
+
+Install Eclipse PyDev Plugin:
+1. Unzip PyDev 13.1.0.zip to "C:\eclipse\dropins"
+2. Restart Eclipse
+3. Window --> Preferences
+   a. PyDev should be there 
+   
+   
+   
+Configure Eclipse PyDev Plugin:
+1. Find python.exe
+   a. Open terminal
+   b. python -c "import os, sys; print(os.path.dirname(sys.executable))"
+   
+2. Eclipse --> Window --> Preferences --> PyDev --> Interpreter --> Python Interpreter
+   a. New --> Browse for python.exe
+      1. Select C:\Python313\python.exe
+      2. Select the folders to be added to the SYSTEM pythonpath = Select All
+        
+
+
+Create a new Python Project:
+1. Eclipse --> File --> New --> Project --> PyDev --> PyDev project
