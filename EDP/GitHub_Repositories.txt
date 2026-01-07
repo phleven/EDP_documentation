@@ -9,6 +9,7 @@ https://github.com/yetanalytics/xapi-java-client
 https://github.com/US-ELRR/elrrdockercompose
 https://github.com/phleven/elrr_documentation
 https://github.com/phleven/EDP_documentation.git
+https://github.com/phleven/Python_Tutorial.git
 
 https://github.com/yetanalytics/java-xapi-tools
 
