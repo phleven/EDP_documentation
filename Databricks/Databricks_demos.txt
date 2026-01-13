@@ -1,0 +1,9 @@
+catalog = irs_group_catalog
+schema = irs_group_catalog.lakeflow-demo-schema
+volume = irs_group_catalog.lakeflow-demo-schema.landing-zone
+
+workspace = irs-group-workspace
+folder = irs-group-workspace.lakeflow-demo
+notebook = irs-group-workspace.lakeflow-demo.example1
+
+csv file volume = /Volumes/irs_group_catalog/lakeflow-demo-schema/landing-zone

@@ -1,0 +1,18 @@
+Taxpayer_ID,First_Name,Last_Name,Filing_Status,Adjusted_Gross_Income,Tax_Year,Address,Email,Valid_From,Valid_To,Record_Status
+9001,Alice,Smith,Single,82000,2025,101 Elm St,alice.smith@email.com,2026-01-01,2026-01-01,Inactive
+9001,Alice,Smith,Single,83000,2025,101 Elm St,alice.smith@email.com,2026-01-02,9999-12-31,Active
+9002,Bob,Johnson,Married,95000,2025,202 Pine Ave,bob.j@email.com,2026-01-01,2026-01-02,Inactive
+9002,Bob,Johnson,Married,95300,2025,202 Pine Ave,bob.j@email.com,2026-01-03,9999-12-31,Active
+9003,Charlie,Lee,Single,67000,2025,303 Maple Rd,charlie.l@email.com,2026-01-01,2026-01-02,Inactive
+9003,Charlie,Lee,Married,68000,2025,404 Elm St,charlie.l@email.com,2026-01-03,9999-12-31,Active
+9004,Dana,Kim,Married,125000,2025,404 Aspen Dr,dana.kim@email.com,2026-01-01,2026-01-03,Inactive
+9004,Dana,Kim,Married,128200,2025,405 Aspen Dr,dana.kim@email.com,2026-01-04,9999-12-31,Active
+9005,Eva,Patel,Head of Household,59000,2025,505 Birch Ln,eva.patel@email.com,2026-01-01,2026-01-01,Inactive
+9005,Eva,Patel,Head of Household,59000,2025,606 Birch Ln,eva.patel@email.com,2026-01-02,9999-12-31,Active
+9006,Frank,Nguyen,Single,71000,2025,606 Cedar Ct,frank.nguyen@email.com,2026-01-01,9999-12-31,Active
+9007,Grace,O'Brien,Married,113250,2025,707 Walnut St,grace.obrien@email.com,2026-01-01,9999-12-31,Active
+9008,Hector,Cruz,Single,86500,2025,808 Chestnut Rd,hector.cruz@email.com,2026-01-01,2026-01-01,Inactive
+9008,Hector,Cruz,Head of Household,89000,2025,808 Chestnut Rd,hector.cruz@email.com,2026-01-02,9999-12-31,Active
+9009,Isabel,Martinez,Single,72000,2025,909 Redwood Blvd,isabel.martinez@email.com,2026-01-01,9999-12-31,Active
+9010,Jackie,Chen,Single,99000,2025,1010 Spruce Ave,jackie.chen@email.com,2026-01-01,2026-01-03,Inactive
+9010,Jackie,Chen,Single,102000,2025,1120 Spruce Ave,jackie.chen@email.com,2026-01-04,9999-12-31,Active

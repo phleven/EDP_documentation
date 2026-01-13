@@ -1,0 +1,11 @@
+Taxpayer_ID,First_Name,Last_Name,Filing_Status,Adjusted_Gross_Income,Tax_Year,Address,Email,Update_Timestamp,Deleted
+9001,Alice,Smith,Married,84500,2025,104 Oak St,alice.smith@email.com,2026-01-04,n
+9002,Bob,Johnson,Married,96750,2025,203 Pine Ave,bob.j@email.com,2026-01-04,n
+9003,Charlie,Lee,Married,71500,2025,404 Elm St,charlie.l@email.com,2026-01-04,n
+9004,Dana,Kim,Married,128200,2025,405 Aspen Dr,dana.kim@email.com,2026-01-04,n
+9005,Eva,Patel,Head of Household,61000,2025,715 Birch Ln,eva.patel@email.com,2026-01-04,n
+9006,Frank,Nguyen,Single,72500,2025,708 Cedar Ct,frank.nguyen@email.com,2026-01-04,n
+9007,Grace,O'Brien,Head of Household,117000,2025,808 Walnut St,grace.obrien@email.com,2026-01-04,n
+9008,Hector,Cruz,Single,89000,2025,1002 Chestnut Rd,hector.cruz@email.com,2026-01-04,n
+9009,Isabel,Martinez,Single,78000,2025,1012 Redwood Blvd,isabel.martinez@email.com,2026-01-04,n
+9010,Jackie,Chen,Single,103100,2025,1120 Spruce Ave,jackie.chen@email.com,2026-01-04,n
