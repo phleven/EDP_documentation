@@ -1,0 +1,4 @@
+USE CATALOG `irs_group_catalog`;
+USE SCHEMA `lakeflow-demo-schema`;
+
+SELECT * from 1040_1;

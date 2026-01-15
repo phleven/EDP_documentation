@@ -1,0 +1,52 @@
+%python
+from databricks.lakeflow import declarative as lf
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DateType
+
+# Initialize Spark session (Databricks automatically provides this in notebooks)
+spark = SparkSession.builder.getOrCreate()
+
+# Define schema for CSV (adjust to your file's structure)
+schema = StructType([
+    StructField("Taxpayer", IntegerType(), True),
+    StructField("First_Name", StringType(), True),
+    StructField("Last_Name", StringType(), True),
+    StructField("First_Name", StringType(), True),
+    StructField("Filing_Status", StringType(), True),
+    StructField("Adjusted_Gross_Income", IntegerType(), True),
+    StructField("Tax_Year", IntegerType(), True),
+    StructField("Address", StringType(), True),
+    StructField("Email", StringType(), True),
+    StructField("Update_Timestamp", DateType(), True),
+    StructField("Deleted", StringType(), True)    
+])
+
+# Define the pipeline
+pipeline = lf.Pipeline(
+    name="csv_import_pipeline_1",
+    description="Pipeline to import CSV data into Unity Catalog table"
+)
+
+# Define the source (CSV file in Unity Catalog volume or cloud storage)
+csv_source = lf.read.csv(
+    path="dbfs:/Volumes/irs_group_catalog/lakeflow_demo_schema/landing_zone/01-01-26_1040.csv",  
+    schema=schema,
+    header=True
+)
+
+# Define the target table in Unity Catalog
+target_table = lf.write.table(
+    name="irs_group_catalog.lakeflow_demo_schema.1040_2",
+    mode="overwrite"  # or "append"
+)
+
+# Connect source to target
+pipeline.add(csv_source >> target_table)
+
+# Deploy and run the pipeline
+try:
+    pipeline.deploy()
+    pipeline.run()
+    print("✅ CSV import pipeline executed successfully.")
+except Exception as e:
+    print(f"❌ Pipeline execution failed: {e}")

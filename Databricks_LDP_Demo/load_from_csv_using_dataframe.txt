@@ -1,0 +1,27 @@
+# This code reads the CSV file into a DataFrame and writes it to a Unity Catalog Delta table. 
+
+%python
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DateType
+
+schema = StructType([
+    StructField("Taxpayer", IntegerType(), True),
+    StructField("First_Name", StringType(), True),
+    StructField("Last_Name", StringType(), True),
+    StructField("Filing_Status", StringType(), True),
+    StructField("Adjusted_Gross_Income", IntegerType(), True),
+    StructField("Tax_Year", IntegerType(), True),
+    StructField("Address", StringType(), True),
+    StructField("Email", StringType(), True),
+    StructField("Update_Timestamp", DateType(), True),
+    StructField("Deleted", StringType(), True)    
+])
+
+df = spark.read.format("csv").option("header", True).schema(schema).load(
+    "dbfs:/Volumes/irs_group_catalog/lakeflow_demo_schema/landing_zone/01-01-26_1040.csv"
+)
+
+df.write.format("delta").mode("overwrite").saveAsTable(
+    "irs_group_catalog.lakeflow_demo_schema.1040_1"
+)
+
+display(df)
