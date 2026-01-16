@@ -1,0 +1,5 @@
+%sql
+GRANT MANAGE ON CATALOG irs_group_catalog TO `phleven@deloitte.com`;
+GRANT WRITE ON VOLUME irs_group_catalog.lakeflow_demo_schema.landing_zone TO `phleven@deloitte.com`;
+GRANT USAGE ON CATALOG irs_group_catalog TO `phleven@deloitte.com`;
+GRANT USAGE ON SCHEMA irs_group_catalog.lakeflow_demo_schema TO `phleven@deloitte.com`;

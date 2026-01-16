@@ -1,0 +1,78 @@
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, lit, current_timestamp
+from delta.tables import DeltaTable
+
+# Initialize Spark session (Databricks automatically provides this)
+spark = SparkSession.builder.appName("SCD2_Pipeline").getOrCreate()
+
+# =========================
+# CONFIGURATION
+# =========================
+target_delta_path = "/mnt/delta/dim_customer"  # Delta table path
+primary_key = "Taxpayer"
+
+# =========================
+# STEP 1: LOAD SOURCE DATA
+# =========================
+try:
+	schema = StructType([
+	    StructField("Taxpayer", IntegerType(), True),
+	    StructField("First_Name", StringType(), True),
+	    StructField("Last_Name", StringType(), True),
+	    StructField("Filing_Status", StringType(), True),
+	    StructField("Adjusted_Gross_Income", IntegerType(), True),
+	    StructField("Tax_Year", IntegerType(), True),
+	    StructField("Address", StringType(), True),
+	    StructField("Email", StringType(), True),
+	    StructField("Update_Timestamp", DateType(), True),
+	    StructField("Deleted", StringType(), True)    
+	])
+	
+	source_df = spark.read.format("csv").option("header", True).schema(schema).load(
+	    "dbfs:/Volumes/irs_group_catalog/lakeflow_demo_schema/landing_zone/01-01-26_1040.csv"
+	)
+
+except Exception as e:
+    raise RuntimeError(f"Error reading CSV: {e}")
+
+# Add SCD2 metadata columns
+source_df = (
+    source_df
+    .withColumn("start_date", current_timestamp())
+    .withColumn("end_date", lit(None).cast("timestamp"))
+    .withColumn("is_current", lit(True))
+)
+
+# =========================
+# STEP 2: CREATE OR MERGE INTO DELTA TABLE
+# =========================
+if DeltaTable.isDeltaTable(spark, target_delta_path):
+    delta_table = DeltaTable.forPath(spark, target_delta_path)
+
+    # Merge logic for SCD2
+    (
+        delta_table.alias("tgt")
+        .merge(
+            source_df.alias("src"),
+            f"tgt.{primary_key} = src.{primary_key} AND tgt.is_current = true"
+        )
+        .whenMatchedUpdate(
+            condition=" OR ".join([f"tgt.{c} <> src.{c}" for c in source_df.columns if c not in ["start_date", "end_date", "is_current"]]),
+            set={
+                "end_date": current_timestamp(),
+                "is_current": lit(False)
+            }
+        )
+        .whenNotMatchedInsertAll()
+        .execute()
+    )
+
+else:
+    # First load — create Delta table
+    source_df.write.format("delta").mode("overwrite").save(target_delta_path)
+
+# =========================
+# STEP 3: VALIDATION
+# =========================
+final_df = spark.read.format("delta").load(target_delta_path)
+final_df.show(truncate=False)
