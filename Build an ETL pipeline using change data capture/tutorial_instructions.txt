@@ -1,0 +1,5 @@
+Build an ETL pipiline using change data capture
+
+1. Run create_sample_data.py
+
+2. Run pipiline (my_transformation.py)

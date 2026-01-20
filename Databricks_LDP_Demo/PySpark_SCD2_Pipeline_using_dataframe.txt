@@ -4,7 +4,7 @@ from pyspark.sql.types import (
 from pyspark.sql.functions import col, lit, current_timestamp
 from delta.tables import DeltaTable
 
-target_delta_path = "/mnt/delta/dim_customer"
+target_delta_path = "/Volumes/irs_group_catalog/lakeflow-demo-schema/landing-zone"
 primary_key = "Taxpayer"
 
 schema = StructType([
