@@ -1,0 +1,16 @@
+1. Open SQL Editor 
+https://dbc-adf4afbc-60f8.cloud.databricks.com/editor/queries/1167838397489059?o=1791719390701951&contextId=sql-editor
+
+2. Run create.database.sql
+
+
+3. Open notebook
+https://dbc-adf4afbc-60f8.cloud.databricks.com/editor/notebooks/2137693102042189?o=1791719390701951#command/6257765748740423
+
+4. Run playing_with_lakebase.py
+
+5. Run display_cluster_details.py
+
+6. Run set_variables.py
+
+7. Run import_to_lakebase.py
